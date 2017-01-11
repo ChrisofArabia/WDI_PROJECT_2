@@ -1,0 +1,11 @@
+{
+  "name": "guided-photo-walk",
+  "version": "1.0.0",
+  "description": "App to provide guided photo walks using Google Maps API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Perry",
+  "license": "ISC"
+}
