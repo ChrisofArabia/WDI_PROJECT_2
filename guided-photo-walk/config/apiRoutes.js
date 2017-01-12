@@ -13,9 +13,7 @@ router.route('/login')
 router.route('/users')
   .get(users.index);
 router.route('/users/:id')
-  .get(users.show)
-  .put(users.update)
-  .delete(users.delete);
+  .put(users.update);
 
 router.route('/landmarks')
   .get(landmarks.index)

@@ -1,5 +1,4 @@
 const photoWalk = photoWalk || {};
-const google = google;
 
 // ***********************************************************
 // Page Templates
@@ -99,6 +98,7 @@ photoWalk.userEdit = function(e) {
   });
 };
 
+
 // ***********************************************************
 // Helper Functions
 // ***********************************************************
@@ -184,84 +184,17 @@ photoWalk.getToken = function() {
   return window.localStorage.getItem('token');
 };
 
-photoWalk.addInfoWindowForLandmark = function(landmark, marker) {
-  google.maps.event.addListener(marker, 'click', () => {
-    if (typeof this.infoWindow !== 'undefined') this.infoWindow.close();
-    this.infoWindow = new google.maps.InfoWindow({
-      content:
-      `
-      <img src='../images/${ landmark.file }' alt='${ landmark.name }'>
-      <a href='${ landmark.website }'>
-        <h3>${ landmark.name }</h3>
-      </a>
-      <p>${ landmark.address }</p>
-      <p>${ landmark.postcode }</p>
-      `
-    });
-    this.infoWindow.open(this.map, marker);
-  });
-};
-
-photoWalk.createMarkerForLandmark = function(landmark) {
-  const latlng = new google.maps.LatLng(landmark.lat, landmark.lng);
-  const marker = new google.maps.Marker({
-    position: latlng,
-    map: this.map,
-    // icon: '/images/marker.png',
-    animation: google.maps.Animation.DROP
-  });
-  this.addInfoWindowForLandmark(landmark, marker);
-};
-
-photoWalk.loopThroughLandmarks = function(data) {
-  $.each(data.landmarks, (index, landmark) => {
-    setTimeout(() => {
-      photoWalk.createMarkerForLandmark(landmark);
-    }, index * 50);
-  });
-};
-
-photoWalk.getLandmarks = function() {
-  $.get('http://localhost:3000/api/landmarks').done(this.loopThroughLandmarks);
-};
-
-// photoWalk.mapSetup = function() {
-//   // console.log('Building map');
-//   const canvas = document.getElementById('map-canvas');
-//   // console.log(canvas);
-//   const mapOptions = {
-//     zoom: 15,
-//     center: new google.maps.LatLng(51.516026,-0.062226),
-//     mapTypeId: google.maps.MapTypeId.ROADMAP
-//   };
-//
-//   this.map = new google.maps.Map(canvas, mapOptions);
-//   this.getLandmarks();
-// };
-
 // ***********************************************************
 // INIT FUNCTION - Start point of app
 // Sets base variables, adds event handlers, and checks
 // whether a user is logged in or out
 // ***********************************************************
 photoWalk.init = function() {
-  // console.log('Building map');
-  const canvas = document.getElementById('map-canvas');
-  // console.log(canvas);
-  const mapOptions = {
-    zoom: 15,
-    center: new google.maps.LatLng(51.516026,-0.062226),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
   // Builds the base URL for subsequent Ajax requests
   this.apiUrl = 'http://localhost:3000/api';
 
   // makes 'main' available to us as required as an OO photoWalk variable
   this.$main = $('main');
-
-  this.map = new google.maps.Map(canvas, mapOptions);
-  this.getLandmarks();
 
   // The 'this' in .bind(this) is back to photoWalk again rather than the click event
   $('.home').on('click', this.home.bind(this));
@@ -286,5 +219,3 @@ photoWalk.init = function() {
 // ** Not sure why - ask question. **
 // Binds init to the photoWalk object, rather than document
 $(photoWalk.init.bind(photoWalk));
-
-// $(photoWalk.mapSetup.bind(photoWalk));

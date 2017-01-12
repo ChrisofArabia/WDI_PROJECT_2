@@ -9,7 +9,7 @@ Landmark.collection.drop();
 
 const landmarks = [
   {
-    'name': 'Whiechapel Bell Foundry',
+    'name': 'Whitechapel Bell Foundry',
     'address': '32-34 Whitechapel Road, London',
     'postcode': 'E1 1DY',
     'buildDate': '1738',
