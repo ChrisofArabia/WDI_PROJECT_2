@@ -27,16 +27,20 @@ photoWalk.register = function(e) {
     <h2>Register</h2>
     <form class="pure-form" method="post" action="/register">
       <div class="form-group">
-        <input class="form-control" type="text" name="user[username]" placeholder="Username">
+        <label for="username">Enter your username: </label>
+        <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username">
       </div>
       <div class="form-group">
-        <input class="form-control" type="email" name="user[email]" placeholder="Email">
+        <label for="email">Enter an email address: </label>
+        <input id="email" class="form-control" type="email" name="user[email]" placeholder="Email">
       </div>
       <div class="form-group">
+        <label for="email">Enter a password: </label>
         <input class="form-control" type="password" name="user[password]" placeholder="Password">
       </div>
       <div class="form-group">
-        <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+        <label for="password_conf">Enter the password again: </label>
+        <input id="password_conf" class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
       </div>
       <input class="pure-button pure-button-primary" type="submit" value="Register">
     </form>
@@ -52,10 +56,12 @@ photoWalk.login = function(e) {
     <h2>Login</h2>
     <form class="pure-form" method="post" action="/login">
       <div class="form-group">
-        <input class="form-control" type="email" name="email" placeholder="Email">
+        <label for="email">Enter your registered email address: </label>
+        <input id="email" class="form-control" type="email" name="email" placeholder="Email">
       </div>
       <div class="form-group">
-        <input class="form-control" type="password" name="password" placeholder="Password">
+        <label for="password">Enter your password: </label>
+        <input id="password" class="form-control" type="password" name="password" placeholder="Password">
       </div>
       <input class="pure-button pure-button-primary" type="submit" value="Login">
     </form>
@@ -116,6 +122,7 @@ photoWalk.logout = function(e) {
 photoWalk.loggedInState = function() {
   $('.loggedIn').show();
   $('.loggedOut').hide();
+  photoWalk.getLandmarks();
 };
 
 // If a logged-in user clicks the logout link, the link states are toggled to 'Login'

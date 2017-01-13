@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(`${__dirname}/public`));
 
+// Permits access to these paths WITHOUT an available JWT token
 app.use('/api', expressJWT({ secret: config.secret })
   .unless({
     path: [
@@ -29,7 +30,7 @@ app.use(jwtErrorHandler);
 
 function jwtErrorHandler(err, req, res, next){
   if (err.name !== 'UnauthorizedError') return next();
-  return res.status(401).json({ message: 'Unauthorized request. XXX' + err });
+  return res.status(401).json({ message: 'Unauthorized request.' + err });
 }
 
 app.use('/', webRouter);
