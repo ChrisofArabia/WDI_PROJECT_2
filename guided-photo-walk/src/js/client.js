@@ -50,14 +50,14 @@ photoWalk.login = function(e) {
   this.$main.html(
     `
     <h2>Login</h2>
-    <form method="post" action="/login">
+    <form class="pure-form" method="post" action="/login">
       <div class="form-group">
         <input class="form-control" type="email" name="email" placeholder="Email">
       </div>
       <div class="form-group">
         <input class="form-control" type="password" name="password" placeholder="Password">
       </div>
-      <input class="btn btn-primary" type="submit" value="Login">
+      <input class="pure-button pure-button-primary" type="submit" value="Login">
     </form>
     `
   );
@@ -79,7 +79,7 @@ photoWalk.userEdit = function(e) {
     photoWalk.$main.html(
       `
       <h2>Edit User Profile</h2>
-      <form method="put" action="/users/${data.user._id}">
+      <form class="pure-form" method="put" action="/users/${data.user._id}">
         <div class="form-group">
           <label for="username">User Name</label>
           <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username" value="${data.user.username}">
@@ -92,7 +92,7 @@ photoWalk.userEdit = function(e) {
           <label for="img">Profile Image URL</label>
           <input id="img" class="form-control" type="text" name="user[img]" value="${data.user.profilePic}">
         </div>
-        <input class="btn btn-primary" type="submit" value="Update Profile">
+        <input class="pure-button pure-button-primary" type="submit" value="Update Profile">
       </form>
       `
     );
