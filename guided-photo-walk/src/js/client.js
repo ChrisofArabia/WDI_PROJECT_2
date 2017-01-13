@@ -125,7 +125,7 @@ photoWalk.loggedOutState = function() {
   $('.loggedIn').hide();
   $('.loggedOut').show();
   // this.register();
-  this.home();
+  // this.home();
 };
 
 // On logout, this function is called to remove the jwt token from local storage
