@@ -81,7 +81,7 @@ photoWalk.userEdit = function(e) {
   const method = 'PUT';
 
   photoWalk.ajaxRequest(url, method, null, data => {
-    console.log('ajaxRequest: ' + url);
+    // console.log('ajaxRequest: ' + url);
     photoWalk.$main.html(
       `
       <h2>Edit User Profile</h2>
@@ -122,7 +122,8 @@ photoWalk.logout = function(e) {
 photoWalk.loggedInState = function() {
   $('.loggedIn').show();
   $('.loggedOut').hide();
-  photoWalk.getLandmarks();
+  this.$main.html('<div id="map-canvas"></div>');
+  this.setupMap();
 };
 
 // If a logged-in user clicks the logout link, the link states are toggled to 'Login'
@@ -130,7 +131,8 @@ photoWalk.loggedInState = function() {
 photoWalk.loggedOutState = function() {
   $('.loggedIn').hide();
   $('.loggedOut').show();
-  // this.home();
+  this.$main.html('<div id="map-canvas"></div>');
+  this.setupMap();
 };
 
 // On logout, this function is called to remove the jwt token from local storage
@@ -141,7 +143,7 @@ photoWalk.removeToken = function() {
 // This function deals with the content of a submitted form
 photoWalk.handleForm = function(e) {
   e.preventDefault();
-  console.log('Form submitted - handleForm function called');
+  // console.log('Form submitted - handleForm function called');
   // Builds the URL values based on the requested action,
   // adds a method, and serializes the form data
   const url = `${photoWalk.apiUrl}${$(this).attr('action')}`;
@@ -160,7 +162,10 @@ photoWalk.handleForm = function(e) {
   });
 };
 
-//
+// ***********************************************************
+// Helper Functions - Set Header for Ajax Requests
+// ***********************************************************
+
 photoWalk.ajaxRequest = function(url, method, data, callback) {
   return $.ajax({
     url,
@@ -231,7 +236,11 @@ photoWalk.loopThroughLandmarks = function(data) {
 };
 
 photoWalk.getLandmarks = function() {
-  $.get('http://localhost:3000/api/landmarks').done(this.loopThroughLandmarks);
+  $.ajax({
+    method: 'GET',
+    url: 'http://localhost:3000/api/landmarks',
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  }).done(this.loopThroughLandmarks);
 };
 
 // ***********************************************************
@@ -254,11 +263,10 @@ photoWalk.callModal = function() {
 };
 
 // ***********************************************************
-// INIT FUNCTION - Start point of app
-// Sets base variables, adds event handlers, and checks
-// whether a user is logged in or out
+// Helper Functions - Setup Map
 // ***********************************************************
-photoWalk.init = function() {
+
+photoWalk.setupMap = function(){
   const canvas = document.getElementById('map-canvas');
   const mapOptions = {
     zoom: 15,
@@ -266,15 +274,30 @@ photoWalk.init = function() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
+  this.map = new google.maps.Map(canvas, mapOptions);
+  if(this.getToken()){
+    this.getLandmarks();
+  }
+};
+
+
+
+// ***********************************************************
+// INIT FUNCTION - Start point of app
+// Sets base variables, adds event handlers, and checks
+// whether a user is logged in or out
+// ***********************************************************
+photoWalk.init = function() {
+
+
+  this.setupMap();
+
   // Builds the base URL for subsequent Ajax requests
   this.apiUrl = 'http://localhost:3000/api';
 
   // makes 'main' available to us as required as an OOP photoWalk variable
   this.$main = $('main');
 
-
-  this.map = new google.maps.Map(canvas, mapOptions);
-  this.getLandmarks();
 
   // The 'this' in .bind(this) is back to photoWalk again rather than the click event
   $('.home').on('click', this.home.bind(this));
