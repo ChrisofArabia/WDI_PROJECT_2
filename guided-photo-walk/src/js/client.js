@@ -116,7 +116,6 @@ photoWalk.logout = function(e) {
 photoWalk.loggedInState = function() {
   $('.loggedIn').show();
   $('.loggedOut').hide();
-  // this.usersIndex();
 };
 
 // If a logged-in user clicks the logout link, the link states are toggled to 'Login'
@@ -124,7 +123,6 @@ photoWalk.loggedInState = function() {
 photoWalk.loggedOutState = function() {
   $('.loggedIn').hide();
   $('.loggedOut').show();
-  // this.register();
   // this.home();
 };
 
@@ -254,9 +252,7 @@ photoWalk.callModal = function() {
 // whether a user is logged in or out
 // ***********************************************************
 photoWalk.init = function() {
-  // console.log('Building map');
   const canvas = document.getElementById('map-canvas');
-  // console.log(canvas);
   const mapOptions = {
     zoom: 15,
     center: new google.maps.LatLng(51.516026,-0.062226),
