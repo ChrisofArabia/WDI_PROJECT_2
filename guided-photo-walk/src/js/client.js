@@ -134,7 +134,7 @@ photoWalk.removeToken = function() {
 // This function deals with the content of a submitted form
 photoWalk.handleForm = function(e) {
   e.preventDefault();
-  // console.log('Form submitted');
+  console.log('Form submitted - handleForm function called');
   // Builds the URL values based on the requested action,
   // adds a method, and serializes the form data
   const url = `${photoWalk.apiUrl}${$(this).attr('action')}`;
