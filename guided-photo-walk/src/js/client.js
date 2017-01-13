@@ -25,7 +25,7 @@ photoWalk.register = function(e) {
   this.$main.html(
     `
     <h2>Register</h2>
-    <form method="post" action="/register">
+    <form class="pure-form" method="post" action="/register">
       <div class="form-group">
         <input class="form-control" type="text" name="user[username]" placeholder="Username">
       </div>
@@ -38,7 +38,7 @@ photoWalk.register = function(e) {
       <div class="form-group">
         <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
       </div>
-      <input class="btn btn-primary" type="submit" value="Register">
+      <input class="pure-button pure-button-primary" type="submit" value="Register">
     </form>
     `
   );
@@ -100,7 +100,7 @@ photoWalk.userEdit = function(e) {
 };
 
 // ***********************************************************
-// Helper Functions
+// Helper Functions - Log In/Out
 // ***********************************************************
 
 // When called, the function calls a function to remove the jwt token and another
@@ -116,7 +116,7 @@ photoWalk.logout = function(e) {
 photoWalk.loggedInState = function() {
   $('.loggedIn').show();
   $('.loggedOut').hide();
-  this.usersIndex();
+  // this.usersIndex();
 };
 
 // If a logged-in user clicks the logout link, the link states are toggled to 'Login'
@@ -184,6 +184,10 @@ photoWalk.getToken = function() {
   return window.localStorage.getItem('token');
 };
 
+// ***********************************************************
+// Helper Functions - Google Maps
+// ***********************************************************
+
 photoWalk.addInfoWindowForLandmark = function(landmark, marker) {
   google.maps.event.addListener(marker, 'click', () => {
     if (typeof this.infoWindow !== 'undefined') this.infoWindow.close();
@@ -225,19 +229,24 @@ photoWalk.getLandmarks = function() {
   $.get('http://localhost:3000/api/landmarks').done(this.loopThroughLandmarks);
 };
 
-// photoWalk.mapSetup = function() {
-//   // console.log('Building map');
-//   const canvas = document.getElementById('map-canvas');
-//   // console.log(canvas);
-//   const mapOptions = {
-//     zoom: 15,
-//     center: new google.maps.LatLng(51.516026,-0.062226),
-//     mapTypeId: google.maps.MapTypeId.ROADMAP
-//   };
-//
-//   this.map = new google.maps.Map(canvas, mapOptions);
-//   this.getLandmarks();
-// };
+// ***********************************************************
+// Helper Functions - Modal
+// ***********************************************************
+
+photoWalk.callModal = function() {
+  // this.$modal = $('#modal');
+  const modal = document.getElementById('modal');
+  const span = document.getElementsByClassName('close')[0];
+  modal.style.display = 'block';
+  span.onclick = function() {
+    modal.style.display = 'none';
+  };
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  };
+};
 
 // ***********************************************************
 // INIT FUNCTION - Start point of app
@@ -257,8 +266,9 @@ photoWalk.init = function() {
   // Builds the base URL for subsequent Ajax requests
   this.apiUrl = 'http://localhost:3000/api';
 
-  // makes 'main' available to us as required as an OO photoWalk variable
+  // makes 'main' available to us as required as an OOP photoWalk variable
   this.$main = $('main');
+
 
   this.map = new google.maps.Map(canvas, mapOptions);
   this.getLandmarks();
@@ -286,5 +296,3 @@ photoWalk.init = function() {
 // ** Not sure why - ask question. **
 // Binds init to the photoWalk object, rather than document
 $(photoWalk.init.bind(photoWalk));
-
-// $(photoWalk.mapSetup.bind(photoWalk));
