@@ -23,40 +23,44 @@ photoWalk.home = function(e) {
 photoWalk.register = function(e) {
   if (e) e.preventDefault; // Prevents page reload
 
-  const registerForm = (
+  const modalHeader = (
     `
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Register</h2>
-      </div>
-      <div class="modal-body">
-        <form class="pure-form" method="post" action="/register">
-          <div class="form-group">
-            <label for="username">Enter your username: </label>
-            <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username">
-          </div>
-          <div class="form-group">
-            <label for="email">Enter an email address: </label>
-            <input id="email" class="form-control" type="email" name="user[email]" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <label for="email">Enter a password: </label>
-            <input class="form-control" type="password" name="user[password]" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <label for="password_conf">Enter the password again: </label>
-            <input id="password_conf" class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
-          </div>
-          <input class="pure-button pure-button-primary" type="submit" value="Register">
-        </form>
-      </div>
-      <div class="modal-footer">
-      <p>Content TBD</p>
-      </div>
-    </div>
+    <h2>Register</h2>
     `
   );
-  this.$main.html(registerForm);
+
+  const modalBody = (
+    `
+    <form class="pure-form" method="post" action="/register">
+      <div class="form-group">
+        <label for="username">Enter your username: </label>
+        <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username">
+      </div>
+      <div class="form-group">
+        <label for="email">Enter an email address: </label>
+        <input id="email" class="form-control" type="email" name="user[email]" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label for="email">Enter a password: </label>
+        <input class="form-control" type="password" name="user[password]" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="password_conf">Enter the password again: </label>
+        <input id="password_conf" class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+      </div>
+      <input class="pure-button pure-button-primary" type="submit" value="Register">
+    </form>
+    `
+  );
+
+  const modalFooter = (
+    `
+      <p>Content TBD</p>
+    `
+  );
+
+  photoWalk.modalTemplate( modalHeader, modalBody, modalFooter );
+  // this.$main.html(registerForm);
 };
 
 // ** USER LOGIN FORM ** view
@@ -268,12 +272,13 @@ photoWalk.modalTemplate = function(modalHeader, modalBody, modalFooter) {
     </div>
     `
   );
-  
+  // this.$main.html(modalContent);
+  this.$modalContainer.html(modalContent);
 };
 
 photoWalk.callModal = function() {
   // this.$modal = $('#modal');
-  const modal = document.getElementById('modal');
+  const modal = document.getElementById('modal-container');
   const span = document.getElementsByClassName('close')[0];
   modal.style.display = 'block';
   span.onclick = function() {
@@ -321,6 +326,7 @@ photoWalk.init = function() {
 
   // makes 'main' available to us as required as an OOP photoWalk variable
   this.$main = $('main');
+  this.$modalContainer = $('#modal-container');
 
 
   // The 'this' in .bind(this) is back to photoWalk again rather than the click event
