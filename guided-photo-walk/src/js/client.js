@@ -22,30 +22,41 @@ photoWalk.home = function(e) {
 // ** USER REGISTRATION FORM **
 photoWalk.register = function(e) {
   if (e) e.preventDefault; // Prevents page reload
-  this.$main.html(
+
+  const registerForm = (
     `
-    <h2>Register</h2>
-    <form class="pure-form" method="post" action="/register">
-      <div class="form-group">
-        <label for="username">Enter your username: </label>
-        <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Register</h2>
       </div>
-      <div class="form-group">
-        <label for="email">Enter an email address: </label>
-        <input id="email" class="form-control" type="email" name="user[email]" placeholder="Email">
+      <div class="modal-body">
+        <form class="pure-form" method="post" action="/register">
+          <div class="form-group">
+            <label for="username">Enter your username: </label>
+            <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="email">Enter an email address: </label>
+            <input id="email" class="form-control" type="email" name="user[email]" placeholder="Email">
+          </div>
+          <div class="form-group">
+            <label for="email">Enter a password: </label>
+            <input class="form-control" type="password" name="user[password]" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="password_conf">Enter the password again: </label>
+            <input id="password_conf" class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+          </div>
+          <input class="pure-button pure-button-primary" type="submit" value="Register">
+        </form>
       </div>
-      <div class="form-group">
-        <label for="email">Enter a password: </label>
-        <input class="form-control" type="password" name="user[password]" placeholder="Password">
+      <div class="modal-footer">
+      <p>Content TBD</p>
       </div>
-      <div class="form-group">
-        <label for="password_conf">Enter the password again: </label>
-        <input id="password_conf" class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
-      </div>
-      <input class="pure-button pure-button-primary" type="submit" value="Register">
-    </form>
+    </div>
     `
   );
+  this.$main.html(registerForm);
 };
 
 // ** USER LOGIN FORM ** view
@@ -246,6 +257,19 @@ photoWalk.getLandmarks = function() {
 // ***********************************************************
 // Helper Functions - Modal
 // ***********************************************************
+
+photoWalk.modalTemplate = function(modalHeader, modalBody, modalFooter) {
+  const modalContent = (
+    `
+    <div class="modal">
+      <div class="modal-header">${ modalHeader }</div>
+      <div class="modal-body">${ modalBody }</div>
+      <div class="modal-footer">${ modalFooter }</div>
+    </div>
+    `
+  );
+  
+};
 
 photoWalk.callModal = function() {
   // this.$modal = $('#modal');
