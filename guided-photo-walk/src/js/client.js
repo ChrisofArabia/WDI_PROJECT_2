@@ -265,30 +265,30 @@ photoWalk.getLandmarks = function() {
 photoWalk.modalTemplate = function(modalHeader, modalBody, modalFooter) {
   const modalContent = (
     `
-    <div class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
       <div class="modal-header">${ modalHeader }</div>
       <div class="modal-body">${ modalBody }</div>
       <div class="modal-footer">${ modalFooter }</div>
     </div>
     `
   );
-  // this.$main.html(modalContent);
+
   this.$modalContainer.html(modalContent);
+  photoWalk.callModal();
 };
 
 photoWalk.callModal = function() {
-  // this.$modal = $('#modal');
-  const modal = document.getElementById('modal-container');
-  const span = document.getElementsByClassName('close')[0];
-  modal.style.display = 'block';
-  span.onclick = function() {
-    modal.style.display = 'none';
-  };
-  window.onclick = function(event) {
-    if (event.target === modal) {
-      modal.style.display = 'none';
+  this.$modalContainer.css('display', 'block');
+  $('.close').on('click', function() {
+    photoWalk.$modalContainer.css('display', 'none');
+  });
+  $(window).on('click', function(e) {
+
+    if (e.target === photoWalk.$modalContainer) {
+      this.$modalContainer.css('display', 'none');
     }
-  };
+  });
 };
 
 // ***********************************************************
@@ -309,25 +309,21 @@ photoWalk.setupMap = function(){
   }
 };
 
-
-
 // ***********************************************************
 // INIT FUNCTION - Start point of app
 // Sets base variables, adds event handlers, and checks
 // whether a user is logged in or out
 // ***********************************************************
 photoWalk.init = function() {
-
-
-  this.setupMap();
-
   // Builds the base URL for subsequent Ajax requests
   this.apiUrl = 'http://localhost:3000/api';
 
-  // makes 'main' available to us as required as an OOP photoWalk variable
+  // makes 'main' and 'modal-container' available to us as required as an OOP photoWalk variables
   this.$main = $('main');
-  this.$modalContainer = $('#modal-container');
+  this.$modalContainer = $('#modal');
 
+  // Calls setupMap function to display Google Map on page
+  this.setupMap();
 
   // The 'this' in .bind(this) is back to photoWalk again rather than the click event
   $('.home').on('click', this.home.bind(this));
@@ -339,6 +335,7 @@ photoWalk.init = function() {
    // ** Check understanding **
    // Think sets up which function is to be called when the form is submitted
   this.$main.on('submit', 'form', this.handleForm);
+  this.$modalContainer.on('submit', 'form', this.handleForm);
 
   // Checks whether there is a user logged in or not
   if (this.getToken()) {
