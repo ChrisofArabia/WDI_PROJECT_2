@@ -23,13 +23,13 @@ photoWalk.home = function(e) {
 photoWalk.register = function(e) {
   if (e) e.preventDefault; // Prevents page reload
 
-  const modalHeader = (
+  const registerHeader = (
     `
     <h2>Register</h2>
     `
   );
 
-  const modalBody = (
+  const registerBody = (
     `
     <form class="pure-form" method="post" action="/register">
       <div class="form-group">
@@ -53,22 +53,28 @@ photoWalk.register = function(e) {
     `
   );
 
-  const modalFooter = (
+  const registerFooter = (
     `
-      <p>Content TBD</p>
+    <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>
     `
   );
 
-  photoWalk.modalTemplate( modalHeader, modalBody, modalFooter );
+  photoWalk.modalTemplate( registerHeader, registerBody, registerFooter );
   // this.$main.html(registerForm);
 };
 
 // ** USER LOGIN FORM ** view
 photoWalk.login = function(e) {
   if (e) e.preventDefault();
-  this.$main.html(
+
+  const loginHeader = (
     `
     <h2>Login</h2>
+    `
+  );
+
+  const loginBody = (
+    `
     <form class="pure-form" method="post" action="/login">
       <div class="form-group">
         <label for="email">Enter your registered email address: </label>
@@ -82,6 +88,14 @@ photoWalk.login = function(e) {
     </form>
     `
   );
+
+  const loginFooter = (
+    `
+    <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>
+    `
+  );
+
+  photoWalk.modalTemplate( loginHeader, loginBody, loginFooter );
 };
 
 // ** USER EDIT PAGE **
