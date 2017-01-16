@@ -169,7 +169,9 @@ photoWalk.removeToken = function() {
   return window.localStorage.clear();
 };
 
-// This function deals with the content of a submitted form
+// ***********************************************************
+// Helper Functions - Handles content of a submitted form
+// ***********************************************************
 photoWalk.handleForm = function(e) {
   e.preventDefault();
   // console.log('Form submitted - handleForm function called');
@@ -187,6 +189,8 @@ photoWalk.handleForm = function(e) {
     if (data.token) {
       photoWalk.setToken(data.token);
       photoWalk.loggedInState();
+      photoWalk.$modalContainer.css('display', 'none');
+      photoWalk.$modalContainer.html('');
     }
   });
 };
@@ -296,10 +300,12 @@ photoWalk.callModal = function() {
   this.$modalContainer.css('display', 'block');
   $('.close').on('click', function() {
     photoWalk.$modalContainer.css('display', 'none');
+    photoWalk.$modalContainer.html('');
   });
   $(window).on('click', function(e) {
     if (e.target.className === photoWalk.$modalContainer[0].className) {
       photoWalk.$modalContainer.css('display', 'none');
+      photoWalk.$modalContainer.html('');
     }
   });
 };
