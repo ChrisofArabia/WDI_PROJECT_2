@@ -134,6 +134,54 @@ photoWalk.userEdit = function(e) {
   });
 };
 
+photoWalk.createRoute = function(e) {
+  // Populate modal with available waypoints (inc. origin & dest)
+  // Include ability to add a route name
+  // Needs views for show, edit and delete
+  if (e) e.preventDefault();
+
+  $.ajax({
+    method: 'GET',
+    url: 'http://localhost:3000/api/landmarks',
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  }).done(data => {
+    var options = '';
+    $.each(data.landmarks, (index, landmark) => {
+      options += `<option value="${ landmark.name }">${ landmark.name }</option>`;
+    });
+    const createRouteHeader = (
+      `
+      <h2>Create a Route</h2>
+      `
+    );
+    const createRouteBody = `
+      <form class="pure-form" method="post" action="/newRoute">
+        <div class="form-group">
+          <label for="email">Add a name for your new route: </label>
+          <input id="route" class="form-control" type="text" name="route" placeholder="Add route name">
+        </div>
+        <div class="form-group">
+          <label for="origin">Enter a start point for your walk: </label>
+          <select id="origin" class="form-control" name="origin">
+            ${options}
+          </select>
+          <label for="destination">Enter a final destination: </label>
+          <select id="destination" class="form-control" name="destination">
+            ${options}
+          </select>
+          <input id="origin" class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <input class="pure-button pure-button-primary" type="submit" value="Login">
+      </form>
+      `;
+
+    const createRouteFooter = `
+      <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>`;
+      
+    photoWalk.modalTemplate(createRouteHeader, createRouteBody, createRouteFooter);
+  });
+};
+
 // ***********************************************************
 // Helper Functions - Log In/Out
 // ***********************************************************
@@ -349,6 +397,7 @@ photoWalk.init = function() {
   $('.register').on('click', this.register.bind(this));
   $('.login').on('click', this.login.bind(this));
   $('.logout').on('click', this.logout.bind(this));
+  // $('.createRoute').on('click', this.createRoute.bind(this));
   this.$main.on('click', '.edit', this.userEdit);
 
    // ** Check understanding **
