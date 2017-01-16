@@ -149,11 +149,9 @@ photoWalk.createRoute = function(e) {
     $.each(data.landmarks, (index, landmark) => {
       options += `<option value="${ landmark.name }">${ landmark.name }</option>`;
     });
-    const createRouteHeader = (
-      `
-      <h2>Create a Route</h2>
-      `
-    );
+
+    const createRouteHeader = `<h2>Create a Route</h2>`;
+
     const createRouteBody = `
       <form class="pure-form" method="post" action="/newRoute">
         <div class="form-group">
@@ -177,7 +175,7 @@ photoWalk.createRoute = function(e) {
 
     const createRouteFooter = `
       <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>`;
-      
+
     photoWalk.modalTemplate(createRouteHeader, createRouteBody, createRouteFooter);
   });
 };
@@ -280,15 +278,25 @@ photoWalk.getToken = function() {
 // ***********************************************************
 
 photoWalk.addInfoWindowForLandmark = function(landmark, marker) {
+  let landmarkUrl = '';
   google.maps.event.addListener(marker, 'click', () => {
     if (typeof this.infoWindow !== 'undefined') this.infoWindow.close();
+    if ( landmark.website ) {
+      // console.log(landmark.website);
+      landmarkUrl = `
+      <a href='${ landmark.website }'>
+        <h3>${ landmark.name }</h3>
+      </a>
+      `;
+      // return landmarkUrl;
+    } else {
+      landmarkUrl = `<h3>${ landmark.name }</h3>`;
+    }
     this.infoWindow = new google.maps.InfoWindow({
       content:
       `
       <img src='../images/${ landmark.file }' alt='${ landmark.name }'>
-      <a href='${ landmark.website }'>
-        <h3>${ landmark.name }</h3>
-      </a>
+      ${ landmarkUrl }
       <p>${ landmark.address }</p>
       <p>${ landmark.postcode }</p>
       `
@@ -397,7 +405,7 @@ photoWalk.init = function() {
   $('.register').on('click', this.register.bind(this));
   $('.login').on('click', this.login.bind(this));
   $('.logout').on('click', this.logout.bind(this));
-  // $('.createRoute').on('click', this.createRoute.bind(this));
+  $('.createRoute').on('click', this.createRoute.bind(this));
   this.$main.on('click', '.edit', this.userEdit);
 
    // ** Check understanding **
