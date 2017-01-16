@@ -224,7 +224,7 @@ photoWalk.getToken = function() {
 };
 
 // ***********************************************************
-// Helper Functions - Google Maps
+// Helper Functions - Place Landmarks on Google Maps
 // ***********************************************************
 
 photoWalk.addInfoWindowForLandmark = function(landmark, marker) {
@@ -298,9 +298,8 @@ photoWalk.callModal = function() {
     photoWalk.$modalContainer.css('display', 'none');
   });
   $(window).on('click', function(e) {
-
-    if (e.target === photoWalk.$modalContainer) {
-      this.$modalContainer.css('display', 'none');
+    if (e.target.className === photoWalk.$modalContainer[0].className) {
+      photoWalk.$modalContainer.css('display', 'none');
     }
   });
 };
