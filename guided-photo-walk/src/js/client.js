@@ -198,6 +198,7 @@ photoWalk.AutocompleteDirectionsHandler = function () {
   this.destinationPlaceId = null;
   this.originInput        = document.getElementById('origin-input');
   this.destinationInput   = document.getElementById('destination-input');
+
   this.directionsService  = new google.maps.DirectionsService;
   this.directionsDisplay  = new google.maps.DirectionsRenderer;
 
@@ -271,7 +272,7 @@ photoWalk.route = function(waypoints, name) {
     wayPoints: waypoints
   };
 
-  console.log('TO SAVE', walk);
+  // console.log('TO SAVE', walk);
 
   return photoWalk.ajaxRequest('/api/walks', 'post', { walk: walk }, data => {
     console.log(data);
@@ -347,6 +348,48 @@ photoWalk.createRoute = function(e) {
   });
 };
 
+photoWalk.plotRoute = function(e) {
+  e.preventDefault();
+  $.ajax({
+    method: 'GET',
+    url: $(e.target).attr('href'),
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  }).done(data => {
+    const walk = data.walk;
+
+    console.log(walk);
+
+    const waypts = [];
+    for (let i = 0; i < walk.wayPoints.length; i++) {
+      // Might need to remove eval at some point?
+      const tmp = eval(walk.wayPoints[i]);
+      waypts.push({
+        location: { lng: tmp[0], lat: tmp[1] },
+        stopover: true
+      });
+    }
+
+    this.directionsService  = new google.maps.DirectionsService;
+    this.directionsDisplay  = new google.maps.DirectionsRenderer;
+
+    this.directionsDisplay.setMap(this.map);
+
+    photoWalk.directionsService.route({
+      origin: { 'placeId': walk.origin },
+      destination: { 'placeId': walk.destination },
+      travelMode: 'WALKING',
+      waypoints: waypts,
+      optimizeWaypoints: true
+    }, function(response, status) {
+      if (status === 'OK') {
+        photoWalk.directionsDisplay.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  });
+};
+
 photoWalk.availableRouteMenu = function(e) {
   if (e) e.preventDefault();
 
@@ -360,7 +403,7 @@ photoWalk.availableRouteMenu = function(e) {
   }).done(data => {
     let walkMenu = '';
     $.each(data.walks, (index, walk) => {
-      walkMenu += `<li class="pure-menu-item"><a href="${ urlStr }/${ walk._id }" class="pure-menu-link">${ walk.walkName }</a></li>`;
+      walkMenu += `<li class="pure-menu-item"><a href="${ urlStr }/${ walk._id }" class="pure-menu-link plotRoute">${ walk.walkName }</a></li>`;
     });
     $('#walk-menu').html(walkMenu);
   });
@@ -421,11 +464,6 @@ photoWalk.handleForm = function(e) {
   return photoWalk.ajaxRequest(url, method, data, data => {
     // Sets token into localStorage using the function setToken()
     // Sets to a logged in state
-
-    if (url === 'http://localhost:3000/api/walks') {
-      console.log(url);
-      photoWalk.availableRouteMenu();
-    }
 
     if (data.token) {
       photoWalk.setToken(data.token);
@@ -604,7 +642,7 @@ photoWalk.init = function() {
   $('.admin').on('click', this.adminTemplate.bind(this));
   $('.modal').on('submit', '#makeRoute', this.makeRoute.bind(this));
   $('body').on('click', '.landmark-admin', this.landmarkIndex.bind(this));
-
+  $('body').on('click', '.plotRoute', this.plotRoute.bind(this));
   // this.$main.on('click', '.edit', this.userEdit);
 
    // ** Check understanding **
