@@ -20,7 +20,7 @@ photoWalk.home = function(e) {
 };
 
 // ** Admin Template
-photoWalk.adminTemplate = function(adminBody) {
+photoWalk.adminTemplate = function() {
   const adminContent = (`
     <div class="admin-content">
       <nav class="pure-menu admin-menu">
@@ -31,7 +31,9 @@ photoWalk.adminTemplate = function(adminBody) {
           <li class="pure-menu-item"><a href="#" class="pure-menu-link user">Edit Users</a></li>
         </ul>
       </nav>
-      <section class="admin-body">${ adminBody }</section>
+      <section class="admin-body">
+        <h1>Welcome to the admin section</h1>
+      </section>
     </div>
     `);
 
@@ -182,7 +184,7 @@ photoWalk.landmarkIndex = function(e) {
       `
     );
     // console.log(landmarkContent);
-    photoWalk.adminTemplate(landmarkContent);
+    $('.admin-body').html(landmarkContent);
   });
 };
 
@@ -263,7 +265,7 @@ photoWalk.route = function(waypoints, name) {
   });
 
   const walk = {
-    name: name,
+    walkName: name,
     origin: self.originPlaceId,
     destination: self.destinationPlaceId,
     wayPoints: waypoints
@@ -308,20 +310,8 @@ photoWalk.createRoute = function(e) {
     // let options = '';
     let selection = '';
     $.each(data.landmarks, (index, landmark) => {
-      // options += `<option value="${ landmark._id }">${ landmark.name }</option>`;
       selection += `<label class="check-waypoint"><input name="waypoints" type="checkbox" value="[${ landmark.lng }, ${ landmark.lat }]"> - ${ landmark.name }<br>`;
     });
-
-    // <div class="form-group">
-    //   <label for="origin">Enter a start point for your walk: </label>
-    //   <select id="origin" class="form-control" name="origin">
-    //     ${options}
-    //   </select>
-    //   <label for="destination">Enter a final destination: </label>
-    //   <select id="destination" class="form-control" name="destination">
-    //     ${options}
-    //   </select>
-    // </div>
 
     const createRouteHeader = `<h2>Create a Route</h2>`;
 
@@ -357,6 +347,24 @@ photoWalk.createRoute = function(e) {
   });
 };
 
+photoWalk.availableRouteMenu = function(e) {
+  if (e) e.preventDefault();
+
+  $.ajax({
+    method: 'GET',
+    url: 'http://localhost:3000/api/walks',
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  }).done(data => {
+    let walkMenu = '';
+    $.each(data.walks, (index, walk) => {
+      walkMenu += `<li class="pure-menu-item"><a href="${ walk._id }" class="pure-menu-link">${ walk.walkName }</a></li>`;
+    });
+    console.log(data);
+    console.log(walkMenu);
+    $('#walk-menu').html(walkMenu);
+  });
+};
+
 // ***********************************************************
 // Helper Functions - Log In/Out
 // ***********************************************************
@@ -376,6 +384,7 @@ photoWalk.loggedInState = function() {
   $('.loggedOut').hide();
   this.$main.html('<div id="map-canvas"></div>');
   this.setupMap();
+  photoWalk.availableRouteMenu();
 };
 
 // If a logged-in user clicks the logout link, the link states are toggled to 'Login'
@@ -411,6 +420,10 @@ photoWalk.handleForm = function(e) {
   return photoWalk.ajaxRequest(url, method, data, data => {
     // Sets token into localStorage using the function setToken()
     // Sets to a logged in state
+    if (url === 'http://localhost:3000/api/walks') {
+      photoWalk.availableRouteMenu();
+    }
+
     if (data.token) {
       photoWalk.setToken(data.token);
       photoWalk.loggedInState();
@@ -496,6 +509,7 @@ photoWalk.createMarkerForLandmark = function(landmark) {
 };
 
 photoWalk.loopThroughLandmarks = function(data) {
+  photoWalk.
   $.each(data.landmarks, (index, landmark) => {
     setTimeout(() => {
       photoWalk.createMarkerForLandmark(landmark);
@@ -587,9 +601,7 @@ photoWalk.init = function() {
   $('.createRoute').on('click', this.createRoute.bind(this));
   $('.admin').on('click', this.adminTemplate.bind(this));
   $('.modal').on('submit', '#makeRoute', this.makeRoute.bind(this));
-
-  // This line screws up the login/logout state
-  $('.landmark-admin').on('click', this.landmarkIndex.bind(this));
+  $('body').on('click', '.landmark-admin', this.landmarkIndex.bind(this));
 
   // this.$main.on('click', '.edit', this.userEdit);
 
