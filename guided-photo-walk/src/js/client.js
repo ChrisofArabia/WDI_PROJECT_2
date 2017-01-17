@@ -2,10 +2,10 @@ const photoWalk = photoWalk || {};
 const google = google;
 
 // ***********************************************************
-// Page Templates
+// ALL PAGE TEMPLATES
 // ***********************************************************
 
-// ** HOME PAGE **
+// ** Home Page **
 photoWalk.home = function(e) {
   if (e) e.preventDefault();
   // Something goes here
@@ -19,7 +19,31 @@ photoWalk.home = function(e) {
   );
 };
 
-// ** USER REGISTRATION FORM **
+// ** Admin Template
+photoWalk.adminTemplate = function(adminBody) {
+  const adminContent = (`
+    <div class="admin-content">
+      <nav class="pure-menu admin-menu">
+        <h3 class="menu-heading">Admin Menu</h3>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link landmark-admin">Edit Landmarks</a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link walk">Edit Walks</a></li>
+          <li class="pure-menu-item"><a href="#" class="pure-menu-link user">Edit Users</a></li>
+        </ul>
+      </nav>
+      <section class="admin-body">${ adminBody }</section>
+    </div>
+    `);
+
+  this.$main.html(adminContent);
+};
+
+
+// -----------------------------------------------------------
+// USER MANAGEMENT
+// -----------------------------------------------------------
+
+// ** User Registration Modal **
 photoWalk.register = function(e) {
   if (e) e.preventDefault; // Prevents page reload
 
@@ -63,7 +87,7 @@ photoWalk.register = function(e) {
   // this.$main.html(registerForm);
 };
 
-// ** USER LOGIN FORM ** view
+// ** User Login Modal ** view
 photoWalk.login = function(e) {
   if (e) e.preventDefault();
 
@@ -98,7 +122,7 @@ photoWalk.login = function(e) {
   photoWalk.modalTemplate( loginHeader, loginBody, loginFooter );
 };
 
-// ** USER EDIT PAGE **
+// ** User Edit View - UNUSED **
 photoWalk.userEdit = function(e) {
   if (e) e.preventDefault();
 
@@ -134,6 +158,40 @@ photoWalk.userEdit = function(e) {
   });
 };
 
+// -----------------------------------------------------------
+// LANDMARK MANAGEMENT
+// -----------------------------------------------------------
+
+// ** Landmark Show View **
+photoWalk.landmarkIndex = function(e) {
+  if (e) e.preventDefault();
+
+  $.ajax({
+    method: 'GET',
+    url: 'http://localhost:3000/api/landmarks',
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  }).done(data => {
+    let places = '';
+    $.each(data.landmarks, (index, landmark) => {
+      places += `<li value="${ landmark._id }"><a href="${ this.apiUrl }/${ landmark._id }">${ landmark.name }</a>: ${ landmark.address }. ${ landmark.postcode }.</li>`;
+    });
+    const landmarkContent = (
+      `
+      <h2 class="admin-header">Landmark Administration</h2>
+      <ul>${ places }</ul>
+      `
+    );
+
+    photoWalk.adminTemplate(landmarkContent);
+  });
+};
+
+
+// -----------------------------------------------------------
+// ROUTE MANAGEMENT
+// -----------------------------------------------------------
+
+// ** Create Route Modal **
 photoWalk.createRoute = function(e) {
   // Populate modal with available waypoints (inc. origin & dest)
   // Include ability to add a route name
@@ -406,6 +464,9 @@ photoWalk.init = function() {
   $('.login').on('click', this.login.bind(this));
   $('.logout').on('click', this.logout.bind(this));
   $('.createRoute').on('click', this.createRoute.bind(this));
+  $('.admin').on('click', this.adminTemplate.bind(this));
+  $('.landmark-admin').on('click', this.landmarkIndex().bind(this));
+
   this.$main.on('click', '.edit', this.userEdit);
 
    // ** Check understanding **

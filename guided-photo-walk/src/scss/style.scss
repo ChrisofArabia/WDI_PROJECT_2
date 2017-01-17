@@ -7,6 +7,38 @@ body {
   color: #f00;
 }
 
+.home, .register, .login, .logout, .createRoute, .admin {
+  color: #333;
+}
+
+.admin-menu {
+  background-color: #333;
+  float: left;
+}
+
+.admin-header {
+  text-align: center;
+}
+
+.admin-body {
+  float: right;
+  width: 80%;
+}
+
+.menu-heading {
+  color: #fdfdfd;
+  padding-left: 0.5em;
+}
+
+.landmark, .walk, .user {
+  color: #eee;
+}
+
+.landmark:hover, .walk:hover, .user:hover, .landmark:focus, .walk:focus, .user:focus {
+  color: #333;
+}
+
+
 
 /* START OF MODAL CSS */
 
@@ -33,10 +65,7 @@ body {
   animation-duration: 0.4s;
   border: 1px solid #888;
   border-radius: 25px;
-  /*
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  margin: 15% auto; /* 25% from the top and centered */
-  */
+  margin: 12% auto;
   padding: 0;
   position: relative;
   width: 70%;
