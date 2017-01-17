@@ -226,12 +226,11 @@ photoWalk.setupAutocompletePlaceChangedListener = function(autocomplete, mode) {
     } else {
       self.destinationPlaceId = place.place_id;
     }
-    // self.route();
   });
 
 };
 
-photoWalk.route = function(waypoints) {
+photoWalk.route = function(waypoints, name) {
   var self = this;
 
   if (!self.originPlaceId || !self.destinationPlaceId) {
@@ -262,6 +261,19 @@ photoWalk.route = function(waypoints) {
       window.alert('Directions request failed due to ' + status);
     }
   });
+
+  const walk = {
+    name: name,
+    origin: self.originPlaceId,
+    destination: self.destinationPlaceId,
+    wayPoints: waypoints
+  };
+
+  console.log('TO SAVE', walk);
+
+  return photoWalk.ajaxRequest('/api/walks', 'post', { walk: walk }, data => {
+    console.log(data);
+  });
 };
 
 // Make Route
@@ -272,15 +284,13 @@ photoWalk.makeRoute = function(e) {
   photoWalk.$modalContainer.css('display', 'none');
   photoWalk.$modalContainer.html('');
 
-  // photoWalk.map.controls[google.maps.ControlPosition.TOP_LEFT].push(photoWalk.originInput);
-  // photoWalk.map.controls[google.maps.ControlPosition.TOP_LEFT].push(photoWalk.destinationInput);
-
+  const name        = $(e.target).find('#name').val();
   const waypoints   = $(e.target).find('input[name="waypoints"]:checked').map(function() {
     return $(this).val();
   }).toArray();
 
   // Display route on the map passing in the waypoints
-  photoWalk.route(waypoints);
+  photoWalk.route(waypoints, name);
 };
 
 // ** Create Route Modal **
@@ -295,10 +305,10 @@ photoWalk.createRoute = function(e) {
     url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
-    let options = '';
+    // let options = '';
     let selection = '';
     $.each(data.landmarks, (index, landmark) => {
-      options += `<option value="${ landmark._id }">${ landmark.name }</option>`;
+      // options += `<option value="${ landmark._id }">${ landmark.name }</option>`;
       selection += `<label class="check-waypoint"><input name="waypoints" type="checkbox" value="[${ landmark.lng }, ${ landmark.lat }]"> - ${ landmark.name }<br>`;
     });
 
@@ -316,11 +326,11 @@ photoWalk.createRoute = function(e) {
     const createRouteHeader = `<h2>Create a Route</h2>`;
 
     const createRouteBody = `
-      <form id="makeRoute" class="pure-form pure-form-stacked" method="post" action="walks/create">
+      <form id="makeRoute" class="pure-form pure-form-stacked">
         <fieldset class="form-fields">
           <div class="form-group">
-            <label for="email">Add a name for your new route: </label>
-            <input id="route" class="form-control" type="text" name="route" placeholder="Add route name">
+            <label for="name">Add a name for your new route: </label>
+            <input id="name" class="form-control" type="text" name="name" placeholder="Add route name">
           </div>
           <div class="form-group">
             <input id="origin-input" class="controls" type="text" placeholder="Enter an origin location">
@@ -387,6 +397,8 @@ photoWalk.removeToken = function() {
 // ***********************************************************
 photoWalk.handleForm = function(e) {
   e.preventDefault();
+  if ($(this).attr('id') === 'makeRoute') return;
+
   // console.log('Form submitted - handleForm function called');
   // Builds the URL values based on the requested action,
   // adds a method, and serializes the form data
