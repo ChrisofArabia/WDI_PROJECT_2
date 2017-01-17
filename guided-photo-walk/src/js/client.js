@@ -350,17 +350,18 @@ photoWalk.createRoute = function(e) {
 photoWalk.availableRouteMenu = function(e) {
   if (e) e.preventDefault();
 
+  const urlStr = 'http://localhost:3000/api/walks';
+  const methodStr = 'GET';
+
   $.ajax({
-    method: 'GET',
-    url: 'http://localhost:3000/api/walks',
+    method: methodStr,
+    url: urlStr,
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
     let walkMenu = '';
     $.each(data.walks, (index, walk) => {
-      walkMenu += `<li class="pure-menu-item"><a href="${ walk._id }" class="pure-menu-link">${ walk.walkName }</a></li>`;
+      walkMenu += `<li class="pure-menu-item"><a href="${ urlStr }/${ walk._id }" class="pure-menu-link">${ walk.walkName }</a></li>`;
     });
-    console.log(data);
-    console.log(walkMenu);
     $('#walk-menu').html(walkMenu);
   });
 };
@@ -420,7 +421,9 @@ photoWalk.handleForm = function(e) {
   return photoWalk.ajaxRequest(url, method, data, data => {
     // Sets token into localStorage using the function setToken()
     // Sets to a logged in state
+
     if (url === 'http://localhost:3000/api/walks') {
+      console.log(url);
       photoWalk.availableRouteMenu();
     }
 
@@ -509,7 +512,6 @@ photoWalk.createMarkerForLandmark = function(landmark) {
 };
 
 photoWalk.loopThroughLandmarks = function(data) {
-  photoWalk.
   $.each(data.landmarks, (index, landmark) => {
     setTimeout(() => {
       photoWalk.createMarkerForLandmark(landmark);
