@@ -123,40 +123,40 @@ photoWalk.login = function(e) {
 };
 
 // ** User Edit View - UNUSED **
-photoWalk.userEdit = function(e) {
-  if (e) e.preventDefault();
-
-  const userUrl = 'http://localhost:3000/api/users';
-  const url = `${userUrl}/${$(this).attr('href')}`;
-  // console.log('URL: ' + url);
-  // console.log('This is: ' + this);
-
-  const method = 'PUT';
-
-  photoWalk.ajaxRequest(url, method, null, data => {
-    // console.log('ajaxRequest: ' + url);
-    photoWalk.$main.html(
-      `
-      <h2>Edit User Profile</h2>
-      <form class="pure-form" method="put" action="/users/${data.user._id}">
-        <div class="form-group">
-          <label for="username">User Name</label>
-          <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username" value="${data.user.username}">
-        </div>
-        <div class="form-group">
-          <label for="bio">User Biography</label>
-          <input id="bio" class="form-control" type="text" name="user[bio]" placeholder="User bio" value="${data.user.bio}">
-        </div>
-        <div class="form-group">
-          <label for="img">Profile Image URL</label>
-          <input id="img" class="form-control" type="text" name="user[img]" value="${data.user.profilePic}">
-        </div>
-        <input class="pure-button pure-button-primary" type="submit" value="Update Profile">
-      </form>
-      `
-    );
-  });
-};
+// photoWalk.userEdit = function(e) {
+//   if (e) e.preventDefault();
+//
+//   const userUrl = 'http://localhost:3000/api/users';
+//   const url = `${userUrl}/${$(this).attr('href')}`;
+//   // console.log('URL: ' + url);
+//   // console.log('This is: ' + this);
+//
+//   const method = 'PUT';
+//
+//   photoWalk.ajaxRequest(url, method, null, data => {
+//     // console.log('ajaxRequest: ' + url);
+//     photoWalk.$main.html(
+//       `
+//       <h2>Edit User Profile</h2>
+//       <form class="pure-form" method="put" action="/users/${data.user._id}">
+//         <div class="form-group">
+//           <label for="username">User Name</label>
+//           <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username" value="${data.user.username}">
+//         </div>
+//         <div class="form-group">
+//           <label for="bio">User Biography</label>
+//           <input id="bio" class="form-control" type="text" name="user[bio]" placeholder="User bio" value="${data.user.bio}">
+//         </div>
+//         <div class="form-group">
+//           <label for="img">Profile Image URL</label>
+//           <input id="img" class="form-control" type="text" name="user[img]" value="${data.user.profilePic}">
+//         </div>
+//         <input class="pure-button pure-button-primary" type="submit" value="Update Profile">
+//       </form>
+//       `
+//     );
+//   });
+// };
 
 // -----------------------------------------------------------
 // LANDMARK MANAGEMENT
@@ -173,7 +173,7 @@ photoWalk.landmarkIndex = function(e) {
   }).done(data => {
     let places = '';
     $.each(data.landmarks, (index, landmark) => {
-      places += `<li value="${ landmark._id }"><a href="${ this.apiUrl }/${ landmark._id }">${ landmark.name }</a>: ${ landmark.address }. ${ landmark.postcode }.</li>`;
+      places += `<li value="${ landmark._id }"><a href="${ this.apiUrl }/landmarks/${ landmark._id }">${ landmark.name }</a>: ${ landmark.address }. ${ landmark.postcode }.</li>`;
     });
     const landmarkContent = (
       `
@@ -181,7 +181,7 @@ photoWalk.landmarkIndex = function(e) {
       <ul>${ places }</ul>
       `
     );
-
+    // console.log(landmarkContent);
     photoWalk.adminTemplate(landmarkContent);
   });
 };
@@ -190,6 +190,98 @@ photoWalk.landmarkIndex = function(e) {
 // -----------------------------------------------------------
 // ROUTE MANAGEMENT
 // -----------------------------------------------------------
+
+photoWalk.AutocompleteDirectionsHandler = function () {
+  this.originPlaceId      = null;
+  this.destinationPlaceId = null;
+  this.originInput        = document.getElementById('origin-input');
+  this.destinationInput   = document.getElementById('destination-input');
+  this.directionsService  = new google.maps.DirectionsService;
+  this.directionsDisplay  = new google.maps.DirectionsRenderer;
+
+  this.directionsDisplay.setMap(this.map);
+
+  // Initialize the autocomplete fields to make them work!
+  this.originAutocomplete  = new google.maps.places.Autocomplete(
+      this.originInput, {placeIdOnly: true});
+  this.destinationAutocomplete = new google.maps.places.Autocomplete(
+      this.destinationInput, {placeIdOnly: true});
+
+  this.setupAutocompletePlaceChangedListener(this.originAutocomplete, 'ORIG');
+  this.setupAutocompletePlaceChangedListener(this.destinationAutocomplete, 'DEST');
+};
+
+photoWalk.setupAutocompletePlaceChangedListener = function(autocomplete, mode) {
+  var self = this;
+
+  autocomplete.bindTo('bounds', self.map);
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+    if (!place.place_id) {
+      window.alert('Please select an option from the dropdown list.');
+      return;
+    }
+    if (mode === 'ORIG') {
+      self.originPlaceId = place.place_id;
+    } else {
+      self.destinationPlaceId = place.place_id;
+    }
+    // self.route();
+  });
+
+};
+
+photoWalk.route = function(waypoints) {
+  var self = this;
+
+  if (!self.originPlaceId || !self.destinationPlaceId) {
+    console.log('No originPlaceId, destinationPlaceId');
+    return;
+  }
+
+  const waypts = [];
+  for (let i = 0; i < waypoints.length; i++) {
+    // Might need to remove eval at some point?
+    const tmp = eval(waypoints[i]);
+    waypts.push({
+      location: { lng: tmp[0], lat: tmp[1] },
+      stopover: true
+    });
+  }
+
+  self.directionsService.route({
+    origin: { 'placeId': self.originPlaceId },
+    destination: { 'placeId': self.destinationPlaceId },
+    travelMode: 'WALKING',
+    waypoints: waypts,
+    optimizeWaypoints: true
+  }, function(response, status) {
+    if (status === 'OK') {
+      self.directionsDisplay.setDirections(response);
+    } else {
+      window.alert('Directions request failed due to ' + status);
+    }
+  });
+};
+
+// Make Route
+photoWalk.makeRoute = function(e) {
+  if (e) e.preventDefault();
+
+  // Close modal
+  photoWalk.$modalContainer.css('display', 'none');
+  photoWalk.$modalContainer.html('');
+
+  // photoWalk.map.controls[google.maps.ControlPosition.TOP_LEFT].push(photoWalk.originInput);
+  // photoWalk.map.controls[google.maps.ControlPosition.TOP_LEFT].push(photoWalk.destinationInput);
+
+  const waypoints   = $(e.target).find('input[name="waypoints"]:checked').map(function() {
+    return $(this).val();
+  }).toArray();
+
+  // Display route on the map passing in the waypoints
+  photoWalk.route(waypoints);
+};
 
 // ** Create Route Modal **
 photoWalk.createRoute = function(e) {
@@ -203,31 +295,45 @@ photoWalk.createRoute = function(e) {
     url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
-    var options = '';
+    let options = '';
+    let selection = '';
     $.each(data.landmarks, (index, landmark) => {
-      options += `<option value="${ landmark.name }">${ landmark.name }</option>`;
+      options += `<option value="${ landmark._id }">${ landmark.name }</option>`;
+      selection += `<label class="check-waypoint"><input name="waypoints" type="checkbox" value="[${ landmark.lng }, ${ landmark.lat }]"> - ${ landmark.name }<br>`;
     });
+
+    // <div class="form-group">
+    //   <label for="origin">Enter a start point for your walk: </label>
+    //   <select id="origin" class="form-control" name="origin">
+    //     ${options}
+    //   </select>
+    //   <label for="destination">Enter a final destination: </label>
+    //   <select id="destination" class="form-control" name="destination">
+    //     ${options}
+    //   </select>
+    // </div>
 
     const createRouteHeader = `<h2>Create a Route</h2>`;
 
     const createRouteBody = `
-      <form class="pure-form" method="post" action="/newRoute">
-        <div class="form-group">
-          <label for="email">Add a name for your new route: </label>
-          <input id="route" class="form-control" type="text" name="route" placeholder="Add route name">
-        </div>
-        <div class="form-group">
-          <label for="origin">Enter a start point for your walk: </label>
-          <select id="origin" class="form-control" name="origin">
-            ${options}
-          </select>
-          <label for="destination">Enter a final destination: </label>
-          <select id="destination" class="form-control" name="destination">
-            ${options}
-          </select>
-          <input id="origin" class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="pure-button pure-button-primary" type="submit" value="Login">
+      <form id="makeRoute" class="pure-form pure-form-stacked" method="post" action="walks/create">
+        <fieldset class="form-fields">
+          <div class="form-group">
+            <label for="email">Add a name for your new route: </label>
+            <input id="route" class="form-control" type="text" name="route" placeholder="Add route name">
+          </div>
+          <div class="form-group">
+            <input id="origin-input" class="controls" type="text" placeholder="Enter an origin location">
+          </div>
+          <div class="form-group">
+            <input id="destination-input" class="controls" type="text" placeholder="Enter a destination location">
+          </div>
+          <div class="form-group">
+            <label for="waypoints">Enter your chosen waypoints: </label>
+            ${ selection }
+          </div>
+          <input class="pure-button pure-button-primary" type="submit" value="Create Route">
+        </fieldset>
       </form>
       `;
 
@@ -235,6 +341,9 @@ photoWalk.createRoute = function(e) {
       <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>`;
 
     photoWalk.modalTemplate(createRouteHeader, createRouteBody, createRouteFooter);
+
+    // Initialize the autocomplete fields in the modal and setup directions Service
+    photoWalk.AutocompleteDirectionsHandler();
   });
 };
 
@@ -465,9 +574,12 @@ photoWalk.init = function() {
   $('.logout').on('click', this.logout.bind(this));
   $('.createRoute').on('click', this.createRoute.bind(this));
   $('.admin').on('click', this.adminTemplate.bind(this));
-  $('.landmark-admin').on('click', this.landmarkIndex().bind(this));
+  $('.modal').on('submit', '#makeRoute', this.makeRoute.bind(this));
 
-  this.$main.on('click', '.edit', this.userEdit);
+  // This line screws up the login/logout state
+  $('.landmark-admin').on('click', this.landmarkIndex.bind(this));
+
+  // this.$main.on('click', '.edit', this.userEdit);
 
    // ** Check understanding **
    // Think sets up which function is to be called when the form is submitted

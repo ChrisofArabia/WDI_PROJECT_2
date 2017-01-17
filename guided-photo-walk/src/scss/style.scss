@@ -11,6 +11,14 @@ body {
   color: #333;
 }
 
+.check-waypoint {
+  display: block;
+}
+
+.form-fields {
+  margin-left: 2em;
+}
+
 .admin-menu {
   background-color: #333;
   float: left;
@@ -68,7 +76,7 @@ body {
   margin: 12% auto;
   padding: 0;
   position: relative;
-  width: 70%;
+  width: 50%;
   background-color: #fdfdfd;
 }
 
@@ -85,6 +93,7 @@ body {
 .modal-body {
   min-height: 5em;
   padding: 2em;
+  text-align: left;
 }
 
 /* Modal Footer */
