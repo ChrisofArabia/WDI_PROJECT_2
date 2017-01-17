@@ -164,6 +164,100 @@ photoWalk.login = function(e) {
 // LANDMARK MANAGEMENT
 // -----------------------------------------------------------
 
+// ** Landmark Create View **
+photoWalk.landmarkCreate = function(e) {
+  if (e) e.preventDefault();
+
+  $.ajax({
+    method: 'POST',
+    url: 'http://localhost:3000/api/landmarks',
+    beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
+  });
+
+  const newLandmarkHeader = (
+    `
+    <h2>Register</h2>
+    `
+  );
+
+  const newLandmarkBody = (
+    `
+    <form class="pure-form" method="post" action="/create">
+
+      <div class="form-group">
+        <label for="landmarkName">Enter a name for the new landmark: </label>
+        <input id="landmarkName" class="form-control" type="text" name="landmark[name]" placeholder="Landmark name">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkAddress">Enter an address: </label>
+        <input id="landmarkAddress" class="form-control" type="text" name="landmark[address]" placeholder="Postal address">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkPostcode">Enter a postcode: </label>
+        <input id="landmarkPostcode" class="form-control" type="text" name="landmark[postcode]" placeholder="Postcode">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkBuildDate">Add a build date (if known): </label>
+        <input id="landmarkBuildDate" class="form-control" type="text" name="landmark[buildDate]" placeholder="Add a build date">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkListed">Listed building status (if known): </label>
+        <input id="landmarkListed" class="form-control" type="text" name="landmark[listed]" placeholder="Add listed building status">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkPublicAccess">Level of public access available: </label>
+        <input id="landmarkPublicAccess" class="form-control" type="text" name="landmark[publicaccess]" placeholder="Level of Public Access available">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkNearestTube">Add nearest tube station: </label>
+        <input id="landmarkNearestTube" class="form-control" type="text" name="landmark[nearestTube]" placeholder="Add nearest tube station">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkWebsite">Add website URL (if available): </label>
+        <input id="landmarkWebsite" class="form-control" type="text" name="landmark[website]" placeholder="Add website URL">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkImage">Add image file name: </label>
+        <input id="landmarkImage" class="form-control" type="text" name="landmark[image]" placeholder="Add image file name">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkDesc">Add a description for the landmark: </label>
+        <input id="landmarkDesc" class="form-control" type="textarea" name="landmark[description]" placeholder="Add a description for the landmark">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkLat">Add a Google LAT coordinate for the landmark: </label>
+        <input id="landmarkLat" class="form-control" type="text" name="landmark[lat]" placeholder="Add a Google LAT coordinate for the landmark">
+      </div>
+
+      <div class="form-group">
+        <label for="landmarkLng">Add a Google LNG coordinate for the landmark: </label>
+        <input id="landmarkLng" class="form-control" type="text" name="landmark[lng]" placeholder="Add a Google LNG coordinate for the landmark">
+      </div>
+
+      <input class="pure-button pure-button-primary" type="submit" value="Save Landmark">
+    </form>
+    `
+  );
+
+  const newLandmarkFooter = (
+    `
+    <p>Made with <span class="redheart">&hearts;</span> at <a href="https://generalassemb.ly/locations/london">GA</a> in London</p>
+    `
+  );
+
+  photoWalk.modalTemplate( newLandmarkHeader, newLandmarkBody, newLandmarkFooter );
+};
+
 // ** Landmark Show View **
 photoWalk.landmarkIndex = function(e) {
   if (e) e.preventDefault();
@@ -210,6 +304,11 @@ photoWalk.landmarkIndex = function(e) {
   });
 };
 
+// ** Landmark Edit View **
+photoWalk.landmarkEdit = function(e) {
+  if (e) e.preventDefault();
+
+};
 
 // -----------------------------------------------------------
 // ROUTE MANAGEMENT
@@ -667,10 +766,11 @@ photoWalk.init = function() {
   this.setupMap();
 
   // The 'this' in .bind(this) is back to photoWalk again rather than the click event
-  $('.home').on('click', this.home.bind(this));
+  $('.home').on('click', this.setupMap.bind(this));
   $('.register').on('click', this.register.bind(this));
   $('.login').on('click', this.login.bind(this));
   $('.logout').on('click', this.logout.bind(this));
+  $('.createLandmark').on('click', this.landmarkCreate.bind(this));
   $('.createRoute').on('click', this.createRoute.bind(this));
   $('.admin').on('click', this.adminTemplate.bind(this));
   $('.modal').on('submit', '#makeRoute', this.makeRoute.bind(this));
