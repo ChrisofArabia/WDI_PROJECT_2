@@ -175,12 +175,34 @@ photoWalk.landmarkIndex = function(e) {
   }).done(data => {
     let places = '';
     $.each(data.landmarks, (index, landmark) => {
-      places += `<li value="${ landmark._id }"><a href="${ this.apiUrl }/landmarks/${ landmark._id }">${ landmark.name }</a>: ${ landmark.address }. ${ landmark.postcode }.</li>`;
+      places +=
+      `
+        <tr id="${ landmark._id }">
+          <td>${ index + 1}</td>
+          <td><a href="${ this.apiUrl }/landmarks/${ landmark._id }">${ landmark.name }</a></td>
+          <td>${ landmark.address }. ${ landmark.postcode }.</td>
+          <td><a href="${ landmark.website }">${ landmark.website }</a></td>
+          <td><button class="button-warning pure-button"><i class="fa fa-pencil fa-fw"></button></i></td>
+          <td><button class="button-error pure-button"><i class="fa fa-trash-o fa-fw"></button></td>
+        </tr>
+      `;
     });
     const landmarkContent = (
       `
       <h2 class="admin-header">Landmark Administration</h2>
-      <ul>${ places }</ul>
+      <table class="pure-table pure-table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Address & Postcode</th>
+            <th>Website</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>${ places }</tbody>
+      </table>
       `
     );
     // console.log(landmarkContent);
@@ -233,6 +255,8 @@ photoWalk.setupAutocompletePlaceChangedListener = function(autocomplete, mode) {
 
 };
 
+// ** Make Route Record in Database **
+
 photoWalk.route = function(waypoints, name) {
   var self = this;
 
@@ -279,7 +303,7 @@ photoWalk.route = function(waypoints, name) {
   });
 };
 
-// Make Route
+// ** Make Route on Map **
 photoWalk.makeRoute = function(e) {
   if (e) e.preventDefault();
 
@@ -357,7 +381,7 @@ photoWalk.plotRoute = function(e) {
   }).done(data => {
     const walk = data.walk;
 
-    console.log(walk);
+    // console.log(walk);
 
     const waypts = [];
     for (let i = 0; i < walk.wayPoints.length; i++) {
@@ -369,10 +393,18 @@ photoWalk.plotRoute = function(e) {
       });
     }
 
+    // Clear past routes
+    // if (this.directionsDisplay !== null) {
+    //   console.log('this.directionsDisplay is not null');
+    //   this.directionsDisplay.setMap(null);
+    //   this.directionsDisplay = null;
+    // }
+
     this.directionsService  = new google.maps.DirectionsService;
     this.directionsDisplay  = new google.maps.DirectionsRenderer;
 
     this.directionsDisplay.setMap(this.map);
+    // console.log('directionsDisplay is: ', this.directionsDisplay);
 
     photoWalk.directionsService.route({
       origin: { 'placeId': walk.origin },
@@ -382,6 +414,7 @@ photoWalk.plotRoute = function(e) {
       optimizeWaypoints: true
     }, function(response, status) {
       if (status === 'OK') {
+        console.log('Response is: ', response);
         photoWalk.directionsDisplay.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);

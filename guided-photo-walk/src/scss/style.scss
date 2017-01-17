@@ -30,7 +30,8 @@ body {
 
 .admin-body {
   float: right;
-  width: 80%;
+  margin-right: 3em;
+  width: 85%;
 }
 
 .menu-heading {
@@ -46,7 +47,24 @@ body {
   color: #333;
 }
 
+.pure-menu-link {
+  color: #eee;
+}
 
+.pure-menu-link:active, .pure-menu-link:hover {
+  background-color: #eee;
+  color: #333;
+}
+
+.button-error {
+  color: #fff;
+  background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.button-warning {
+  color: #fff;
+  background: rgb(223, 117, 20); /* this is an orange */
+}
 
 /* START OF MODAL CSS */
 
@@ -82,10 +100,10 @@ body {
 
 /* Modal Header */
 .modal-header {
-  background-color: #666;
+  background-color: #cbcbcb;
   border-top-right-radius: 25px;
   border-top-left-radius: 25px;
-  color: #fdfdfd;
+  color: #fff;
   padding: 2px 16px;
 }
 
@@ -98,10 +116,10 @@ body {
 
 /* Modal Footer */
 .modal-footer {
-  background-color: #666;
+  background-color: #cbcbcb;
   border-bottom-right-radius: 25px;
   border-bottom-left-radius: 25px;
-  color: #fdfdfd;
+  color: #fff;
   padding: 2px 16px;
 }
 
