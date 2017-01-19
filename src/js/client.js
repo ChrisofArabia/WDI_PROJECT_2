@@ -283,7 +283,9 @@ photoWalk.landmarkIndex = function(e) {
     });
     const landmarkContent = (
       `
-      <h2 class="admin-header">Landmark Administration</h2>
+      <header class="admin-header">
+        <h3 class="admin-heading">Landmark Administration</h3>
+      </header>
       <table class="pure-table pure-table-bordered">
         <thead>
           <tr>

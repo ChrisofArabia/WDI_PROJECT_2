@@ -22,15 +22,24 @@ body {
 .admin-menu {
   background-color: #333;
   float: left;
+  width: 15%;
 }
 
 .admin-header {
+  background-color: #999;
   text-align: center;
+  width: 100%;
+}
+
+.admin-heading {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .admin-body {
   float: right;
-  margin-right: 3em;
   width: 85%;
 }
 
@@ -40,10 +49,12 @@ body {
 }
 
 .landmark, .walk, .user {
+  background-color: #333;
   color: #eee;
 }
 
-.landmark:hover, .walk:hover, .user:hover, .landmark:focus, .walk:focus, .user:focus {
+.landmark-admin:hover, .walk:hover, .user:hover, .landmark-admin:focus, .walk:focus, .user:focus, .landmark-admin:active, .walk:active, .user:active {
+  background-color: #eee;
   color: #333;
 }
 
@@ -64,6 +75,10 @@ body {
 .button-warning {
   color: #fff;
   background: rgb(223, 117, 20); /* this is an orange */
+}
+
+.pure-table {
+  margin: 2em;
 }
 
 /* START OF MODAL CSS */
