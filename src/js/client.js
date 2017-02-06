@@ -128,7 +128,7 @@ photoWalk.login = function(e) {
 // photoWalk.userEdit = function(e) {
 //   if (e) e.preventDefault();
 //
-//   const userUrl = 'http://localhost:3000/api/users';
+//   const userUrl = 'https://localhost:3000/api/users';
 //   const url = `${userUrl}/${$(this).attr('href')}`;
 //   // console.log('URL: ' + url);
 //   // console.log('This is: ' + this);
@@ -170,7 +170,7 @@ photoWalk.landmarkCreate = function(e) {
 
   $.ajax({
     method: 'POST',
-    url: 'http://localhost:3000/api/landmarks',
+    url: 'https://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   });
 
@@ -264,7 +264,7 @@ photoWalk.landmarkIndex = function(e) {
 
   $.ajax({
     method: 'GET',
-    url: 'http://localhost:3000/api/landmarks',
+    url: 'https://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
     let places = '';
@@ -430,7 +430,7 @@ photoWalk.createRoute = function(e) {
 
   $.ajax({
     method: 'GET',
-    url: 'http://localhost:3000/api/landmarks',
+    url: 'https://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
     // let options = '';
@@ -527,7 +527,7 @@ photoWalk.plotRoute = function(e) {
 photoWalk.availableRouteMenu = function(e) {
   if (e) e.preventDefault();
 
-  const urlStr = 'http://localhost:3000/api/walks';
+  const urlStr = 'https://localhost:3000/api/walks';
   const methodStr = 'GET';
 
   $.ajax({
@@ -694,7 +694,7 @@ photoWalk.loopThroughLandmarks = function(data) {
 photoWalk.getLandmarks = function() {
   $.ajax({
     method: 'GET',
-    url: 'http://localhost:3000/api/landmarks',
+    url: 'https://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(this.loopThroughLandmarks);
 };
@@ -758,7 +758,7 @@ photoWalk.setupMap = function(){
 // ***********************************************************
 photoWalk.init = function() {
   // Builds the base URL for subsequent Ajax requests
-  this.apiUrl = 'http://localhost:3000/api';
+  this.apiUrl = 'https://localhost:3000/api';
 
   // makes 'main' and 'modal-container' available to us as required as an OOP photoWalk variables
   this.$main = $('main');
