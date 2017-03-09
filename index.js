@@ -37,7 +37,3 @@ app.use('/', webRouter);
 app.use('/api', apiRouter);
 
 app.listen(config.port, () => console.log(`Express started on port: ${config.port}`));
-
-
-//note
-//hello chris nat

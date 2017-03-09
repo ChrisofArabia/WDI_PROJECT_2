@@ -124,42 +124,6 @@ photoWalk.login = function(e) {
   photoWalk.modalTemplate( loginHeader, loginBody, loginFooter );
 };
 
-// ** User Edit View - UNUSED **
-// photoWalk.userEdit = function(e) {
-//   if (e) e.preventDefault();
-//
-//   const userUrl = 'https://localhost:3000/api/users';
-//   const url = `${userUrl}/${$(this).attr('href')}`;
-//   // console.log('URL: ' + url);
-//   // console.log('This is: ' + this);
-//
-//   const method = 'PUT';
-//
-//   photoWalk.ajaxRequest(url, method, null, data => {
-//     // console.log('ajaxRequest: ' + url);
-//     photoWalk.$main.html(
-//       `
-//       <h2>Edit User Profile</h2>
-//       <form class="pure-form" method="put" action="/users/${data.user._id}">
-//         <div class="form-group">
-//           <label for="username">User Name</label>
-//           <input id="username" class="form-control" type="text" name="user[username]" placeholder="Username" value="${data.user.username}">
-//         </div>
-//         <div class="form-group">
-//           <label for="bio">User Biography</label>
-//           <input id="bio" class="form-control" type="text" name="user[bio]" placeholder="User bio" value="${data.user.bio}">
-//         </div>
-//         <div class="form-group">
-//           <label for="img">Profile Image URL</label>
-//           <input id="img" class="form-control" type="text" name="user[img]" value="${data.user.profilePic}">
-//         </div>
-//         <input class="pure-button pure-button-primary" type="submit" value="Update Profile">
-//       </form>
-//       `
-//     );
-//   });
-// };
-
 // -----------------------------------------------------------
 // LANDMARK MANAGEMENT
 // -----------------------------------------------------------
@@ -494,13 +458,6 @@ photoWalk.plotRoute = function(e) {
       });
     }
 
-    // Clear past routes
-    // if (this.directionsDisplay !== null) {
-    //   console.log('this.directionsDisplay is not null');
-    //   this.directionsDisplay.setMap(null);
-    //   this.directionsDisplay = null;
-    // }
-
     this.directionsService  = new google.maps.DirectionsService;
     this.directionsDisplay  = new google.maps.DirectionsRenderer;
 
@@ -793,7 +750,5 @@ photoWalk.init = function() {
   }
 };
 
-// Needs to be after the photoWalk.init function itself, otherwise the app dies
-// ** Not sure why - ask question. **
 // Binds init to the photoWalk object, rather than document
 $(photoWalk.init.bind(photoWalk));
