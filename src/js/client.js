@@ -134,13 +134,13 @@ photoWalk.landmarkCreate = function(e) {
 
   $.ajax({
     method: 'POST',
-    url: 'https://localhost:3000/api/landmarks',
+    url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   });
 
   const newLandmarkHeader = (
     `
-    <h2>Register</h2>
+    <h2>Create New Landmark</h2>
     `
   );
 
@@ -228,7 +228,7 @@ photoWalk.landmarkIndex = function(e) {
 
   $.ajax({
     method: 'GET',
-    url: 'https://localhost:3000/api/landmarks',
+    url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
     let places = '';
@@ -394,7 +394,7 @@ photoWalk.createRoute = function(e) {
 
   $.ajax({
     method: 'GET',
-    url: 'https://localhost:3000/api/landmarks',
+    url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(data => {
     // let options = '';
@@ -484,7 +484,7 @@ photoWalk.plotRoute = function(e) {
 photoWalk.availableRouteMenu = function(e) {
   if (e) e.preventDefault();
 
-  const urlStr = 'https://localhost:3000/api/walks';
+  const urlStr = 'http://localhost:3000/api/walks';
   const methodStr = 'GET';
 
   $.ajax({
@@ -619,7 +619,7 @@ photoWalk.addInfoWindowForLandmark = function(landmark, marker) {
     this.infoWindow = new google.maps.InfoWindow({
       content:
       `
-      <img src='../images/${ landmark.file }' alt='${ landmark.name }'>
+      <img src='../images/${ landmark.image }' alt='${ landmark.name }'>
       ${ landmarkUrl }
       <p>${ landmark.address }</p>
       <p>${ landmark.postcode }</p>
@@ -651,7 +651,7 @@ photoWalk.loopThroughLandmarks = function(data) {
 photoWalk.getLandmarks = function() {
   $.ajax({
     method: 'GET',
-    url: 'https://localhost:3000/api/landmarks',
+    url: 'http://localhost:3000/api/landmarks',
     beforeSend: photoWalk.setRequestHeader.bind(photoWalk)
   }).done(this.loopThroughLandmarks);
 };
@@ -715,7 +715,7 @@ photoWalk.setupMap = function(){
 // ***********************************************************
 photoWalk.init = function() {
   // Builds the base URL for subsequent Ajax requests
-  this.apiUrl = 'https://localhost:3000/api';
+  this.apiUrl = 'http://localhost:3000/api';
 
   // makes 'main' and 'modal-container' available to us as required as an OOP photoWalk variables
   this.$main = $('main');

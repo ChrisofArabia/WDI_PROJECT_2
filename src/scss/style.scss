@@ -3,6 +3,10 @@ body {
   padding: 0;
 }
 
+header {
+    background-color: rgba(240, 224, 200, 0.5);
+}
+
 .redheart {
   color: #f00;
 }
@@ -59,11 +63,12 @@ body {
 }
 
 .pure-menu-link {
-  color: #eee;
+  color: #333;
+  font-size: 1.2em;
 }
 
 .pure-menu-link:active, .pure-menu-link:hover {
-  background-color: #eee;
+  background-color: #ddd;
   color: #333;
 }
 

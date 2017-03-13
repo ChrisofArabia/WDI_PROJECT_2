@@ -77,6 +77,7 @@ const landmarks = [
     'publicaccess': 'Yes',
     'nearestTube': 'Aldgate East, Liverpool Street',
     'website': 'http://ccspits.org/',
+    'image': 'christ_church_spitalfields.jpeg',
     'lat': '51.519107',
     'lng': '-0.074458'
   },
