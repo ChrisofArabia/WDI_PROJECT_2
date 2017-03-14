@@ -1,0 +1,35 @@
+{
+  "name": "guided-photo-walk",
+  "description": "App to provide guided photo walks using Google Maps API",
+  "main": "index.js",
+  "authors": [
+    "Chris Perry"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/christopherallanperry/WDI_PROJECT_2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pure": "^0.6.2",
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7"
+  },
+  "overrides": {
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css",
+        "fonts/**"
+      ]
+    },
+    "bootstrap": {
+      "main": [
+        "dist/js/bootstrap.js"
+      ]
+    }
+  }
+}
